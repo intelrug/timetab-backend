@@ -1,0 +1,31 @@
+{
+  "name": "timetab",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node -r dotenv-flow/config ./app/server.ts",
+    "prod": "node -r dotenv-flow/config ./build/server.js",
+    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx ./app/"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/node": "^12.6.8",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-typescript": "^4.0.1",
+    "eslint-plugin-import": "^2.18.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv-flow": "^3.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.2.0",
+    "mysql2": "^1.6.5",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.0-alpha.23",
+    "typescript": "^3.5.3"
+  }
+}

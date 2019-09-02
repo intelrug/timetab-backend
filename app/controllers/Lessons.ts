@@ -15,6 +15,14 @@ export interface LessonsGetMany {
   types: Type[],
 }
 
+export interface LessonsGetOne {
+  lesson: Lesson,
+  groups: Group[],
+  teachers: Teacher[],
+  sciences: Science[],
+  types: Type[],
+}
+
 @Route('lessons')
 export class Lessons extends Controller {
   @Get()
@@ -29,5 +37,11 @@ export class Lessons extends Controller {
     @Query() science_ids?: string,
   ): Promise<LessonsGetMany> {
     return LessonEntity.getMany(ids, group_ids, type_ids, weeks, days, teacher_ids, science_ids);
+  }
+
+  @Get('{id}')
+  @OperationId('lessonsGetOne')
+  public async getOne(id: number): Promise<LessonsGetOne> {
+    return LessonEntity.getOne(id);
   }
 }

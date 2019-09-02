@@ -118,4 +118,34 @@ export default class LessonEntity extends BaseEntity implements Lesson {
       lessons, groups, teachers, sciences, types,
     };
   }
+
+  public static async getOne(id: number): Promise<{
+    lesson: Lesson,
+    groups: GroupEntity[],
+    teachers: TeacherEntity[],
+    sciences: ScienceEntity[],
+    types: TypeEntity[]
+  }> {
+    const lesson: LessonEntity = await LessonEntity.findOne(id);
+
+    const groups: GroupEntity[] = [];
+    const teachers: TeacherEntity[] = [];
+    const sciences: ScienceEntity[] = [];
+    const types: TypeEntity[] = [];
+
+    await getManager().transaction(async tem => {
+      groups.push(await tem.findOne(GroupEntity, lesson.group_id));
+      sciences.push(await tem.findOne(ScienceEntity, lesson.science_id));
+      if (lesson.teacher_id) {
+        teachers.push(await tem.findOne(TeacherEntity, lesson.teacher_id));
+      }
+      if (lesson.type_id) {
+        types.push(await tem.findOne(TypeEntity, lesson.type_id));
+      }
+    });
+
+    return {
+      lesson, groups, teachers, sciences, types,
+    };
+  }
 }

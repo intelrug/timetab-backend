@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Query, Route,
+  Controller, Get, OperationId, Query, Route,
 } from 'tsoa';
 import LessonEntity, { Lesson } from '../models/Lesson';
 import { Group } from '../models/Group';
@@ -18,6 +18,7 @@ export interface LessonsGetMany {
 @Route('lessons')
 export class Lessons extends Controller {
   @Get()
+  @OperationId('lessonsGetMany')
   public async getMany(
     @Query() ids?: string,
     @Query() group_ids?: string,

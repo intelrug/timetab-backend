@@ -7,6 +7,9 @@
   "routes": {
     "basePath": "/",
     "entryFile": "./app/app.ts",
-    "routesDir": "./app"
+    "routesDir": "./app",
+    "controllerPathGlobs": [
+      "./app/controllers/*"
+    ]
   }
 }

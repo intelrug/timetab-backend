@@ -1,25 +1,32 @@
-import { Request, Response } from 'express';
-import Lesson from '../models/Lesson';
-import Helper from '../lib/Helper';
-import APICode from '../lib/APICode';
+import {
+  Controller, Get, Query, Route,
+} from 'tsoa';
+import LessonEntity, { Lesson } from '../models/Lesson';
+import { Group } from '../models/Group';
+import { Teacher } from '../models/Teacher';
+import { Science } from '../models/Science';
+import { Type } from '../models/Type';
 
-export default class Lessons {
-  public static async getMany(req: Request, res: Response) {
-    const { ids } = req.query;
-    const groupIds = req.query.group_ids;
-    const typeIds = req.query.type_ids;
-    const { weeks } = req.query;
-    const { days } = req.query;
-    const teacherIds: string = req.query.teacher_ids;
-    const scienceIds: string = req.query.science_ids;
+export interface LessonsGetMany {
+  lessons: Lesson[],
+  groups: Group[],
+  teachers: Teacher[],
+  sciences: Science[],
+  types: Type[],
+}
 
-    try {
-      const lessons: Lesson[] = await Lesson.getMany(
-        ids, groupIds, typeIds, weeks, days, teacherIds, scienceIds,
-      );
-      res.send({ lessons });
-    } catch (e) {
-      Helper.sendError(res, new APICode(0));
-    }
+@Route('lessons')
+export class Lessons extends Controller {
+  @Get()
+  public async getMany(
+    @Query() ids?: string,
+    @Query() group_ids?: string,
+    @Query() type_ids?: string,
+    @Query() weeks?: string,
+    @Query() days?: string,
+    @Query() teacher_ids?: string,
+    @Query() science_ids?: string,
+  ): Promise<LessonsGetMany> {
+    return LessonEntity.getMany(ids, group_ids, type_ids, weeks, days, teacher_ids, science_ids);
   }
 }

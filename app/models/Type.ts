@@ -2,13 +2,13 @@ import {
   BaseEntity, Column, Entity, PrimaryGeneratedColumn,
 } from 'typeorm';
 
-export interface Group {
+export interface Type {
   id: number;
   name: string;
 }
 
-@Entity('groups')
-export default class GroupEntity extends BaseEntity implements Group {
+@Entity('types')
+export default class TypeEntity extends BaseEntity implements Type {
   @PrimaryGeneratedColumn()
   id: number;
 

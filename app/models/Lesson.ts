@@ -1,9 +1,26 @@
 import {
-  BaseEntity, Column, Entity, PrimaryGeneratedColumn, If, In,
+  BaseEntity, Column, Entity, PrimaryGeneratedColumn, If, In, getManager,
 } from 'typeorm';
+import GroupEntity from './Group';
+import TeacherEntity from './Teacher';
+import ScienceEntity from './Science';
+import TypeEntity from './Type';
+
+export interface Lesson {
+  id: number;
+  group_id: number;
+  type_id: number;
+  week: number;
+  day: number;
+  number: number;
+  count: number;
+  teacher_id: number;
+  science_id: number;
+  auditory: string;
+}
 
 @Entity('lessons')
-export default class Lesson extends BaseEntity {
+export default class LessonEntity extends BaseEntity implements Lesson {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -46,8 +63,14 @@ export default class Lesson extends BaseEntity {
     days: string = '',
     teacherIds: string = '',
     scienceIds: string = '',
-  ): Promise<Lesson[]> {
-    return Lesson.find({
+  ): Promise<{
+      lessons: Lesson[],
+      groups: GroupEntity[],
+      teachers: TeacherEntity[],
+      sciences: ScienceEntity[],
+      types: TypeEntity[]
+    }> {
+    const lessons: Lesson[] = await LessonEntity.find({
       where: {
         id: If(ids, In(ids.split(','))),
         group_id: If(groupIds, In(groupIds.split(','))),
@@ -58,5 +81,41 @@ export default class Lesson extends BaseEntity {
         science_id: If(scienceIds, In(scienceIds.split(','))),
       },
     });
+
+    const groupIdsAll: number[] = [];
+    const teacherIdsAll: number[] = [];
+    const scienceIdsAll: number[] = [];
+    const typeIdsAll: number[] = [];
+
+    let groups: GroupEntity[] = [];
+    let teachers: TeacherEntity[] = [];
+    let sciences: ScienceEntity[] = [];
+    let types: TypeEntity[] = [];
+
+    lessons.forEach(lesson => {
+      groupIdsAll.push(lesson.group_id);
+      if (lesson.teacher_id) teacherIdsAll.push(lesson.teacher_id);
+      if (lesson.science_id) scienceIdsAll.push(lesson.science_id);
+      if (lesson.type_id) typeIdsAll.push(lesson.type_id);
+    });
+
+    await getManager().transaction(async tem => {
+      if (groupIdsAll.length > 0) {
+        groups = await tem.find(GroupEntity, { where: { id: In(groupIdsAll) } });
+      }
+      if (teacherIdsAll.length > 0) {
+        teachers = await tem.find(TeacherEntity, { where: { id: In(teacherIdsAll) } });
+      }
+      if (scienceIdsAll.length > 0) {
+        sciences = await tem.find(ScienceEntity, { where: { id: In(scienceIdsAll) } });
+      }
+      if (typeIdsAll.length > 0) {
+        types = await tem.find(TypeEntity, { where: { id: In(typeIdsAll) } });
+      }
+    });
+
+    return {
+      lessons, groups, teachers, sciences, types,
+    };
   }
 }

@@ -3,17 +3,30 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as cors from 'cors';
 import { createConnection } from 'typeorm';
-import router from './routes/Routes';
+import * as swaggerUi from 'swagger-ui-express';
+import { RegisterRoutes } from './routes';
 
-const app: express.Application = express();
+const app = express();
 
 function config(): void {
   app.use(cors());
-  app.use(router);
   app.use(express.static(path.join(__dirname, '../public')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(express.static('public'));
+  RegisterRoutes(app);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err, req, res, next) => {
+    res.status(err.status);
+    res.json(err);
+  });
+  try {
+    // eslint-disable-next-line global-require
+    const swaggerDocument = require('../swagger.json');
+    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  } catch (err) {
+    console.log('Unable to load swagger.json', err);
+  }
 }
 
 function setupDb() {

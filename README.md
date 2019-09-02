@@ -11,6 +11,11 @@ npm ci
 npm run build
 ```
 
+### Generate documentation and routes
+```
+npm run generate
+```
+
 ### Compile and run for development
 ```
 npm run dev

@@ -1,7 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity, Column, Entity, PrimaryGeneratedColumn,
+} from 'typeorm';
+
+export interface Teacher {
+  id: number;
+  name: string;
+  link: string;
+}
 
 @Entity('teachers')
-export default class Teacher {
+export default class TeacherEntity extends BaseEntity implements Teacher {
   @PrimaryGeneratedColumn()
   id: number;
 

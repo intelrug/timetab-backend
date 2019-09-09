@@ -2,7 +2,8 @@
   "swagger": {
     "outputDirectory": ".",
     "entryFile": "./app/app.ts",
-    "noImplicitAdditionalProperties": "silently-remove-extras"
+    "noImplicitAdditionalProperties": "silently-remove-extras",
+    "basePath": "api"
   },
   "routes": {
     "basePath": "api",

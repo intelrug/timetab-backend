@@ -23,7 +23,7 @@ function config(): void {
   try {
     // eslint-disable-next-line global-require
     const swaggerDocument = require('../swagger.json');
-    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   } catch (err) {
     console.log('Unable to load swagger.json', err);
   }

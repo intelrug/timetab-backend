@@ -1,5 +1,13 @@
 import {
-  BaseEntity, Column, Entity, PrimaryGeneratedColumn, If, In, getManager,
+  BaseEntity,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  If,
+  In,
+  getManager,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import GroupEntity from './Group';
 import TeacherEntity from './Teacher';
@@ -23,7 +31,7 @@ export interface Lesson {
 
 @Entity('lessons')
 export default class LessonEntity extends BaseEntity implements Lesson {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
   @Column({ type: 'int', unsigned: true })
@@ -64,6 +72,22 @@ export default class LessonEntity extends BaseEntity implements Lesson {
 
   @Column({ type: 'varchar', nullable: true, default: null })
   notes: string;
+
+  @ManyToOne(() => GroupEntity, (group): Lesson[] => group.lessons)
+  @JoinColumn({ name: 'group_id' })
+  group: GroupEntity;
+
+  @ManyToOne(() => TypeEntity, (type): Lesson[] => type.lessons)
+  @JoinColumn({ name: 'type_id' })
+  type: TypeEntity;
+
+  @ManyToOne(() => TeacherEntity, (teacher): Lesson[] => teacher.lessons)
+  @JoinColumn({ name: 'teacher_id' })
+  teacher: TeacherEntity;
+
+  @ManyToOne(() => ScienceEntity, (science): Lesson[] => science.lessons)
+  @JoinColumn({ name: 'science_id' })
+  science: ScienceEntity;
 
   public static async getMany(
     ids: string = '',

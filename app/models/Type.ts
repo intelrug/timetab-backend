@@ -1,6 +1,7 @@
 import {
-  BaseEntity, Column, Entity, If, In, PrimaryGeneratedColumn,
+  BaseEntity, Column, Entity, If, In, OneToMany, PrimaryGeneratedColumn,
 } from 'typeorm';
+import LessonEntity from "./Lesson";
 
 export interface Type {
   id: number;
@@ -9,11 +10,14 @@ export interface Type {
 
 @Entity('types')
 export default class TypeEntity extends BaseEntity implements Type {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
   @Column({ type: 'varchar' })
   name: string;
+
+  @OneToMany(() => LessonEntity, (lesson): TypeEntity => lesson.type)
+  lessons: LessonEntity[];
 
   public static async getMany(ids: string = ''): Promise<TypeEntity[]> {
     return TypeEntity.find({

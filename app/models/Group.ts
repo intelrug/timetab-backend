@@ -1,6 +1,7 @@
 import {
-  BaseEntity, Column, Entity, If, In, PrimaryGeneratedColumn,
+  BaseEntity, Column, Entity, If, In, OneToMany, PrimaryGeneratedColumn,
 } from 'typeorm';
+import LessonEntity from './Lesson';
 
 export interface Group {
   id: number;
@@ -9,11 +10,14 @@ export interface Group {
 
 @Entity('groups')
 export default class GroupEntity extends BaseEntity implements Group {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
   @Column({ type: 'varchar' })
   name: string;
+
+  @OneToMany(() => LessonEntity, (lesson): GroupEntity => lesson.group)
+  lessons: LessonEntity[];
 
   public static async getMany(ids: string = ''): Promise<GroupEntity[]> {
     return GroupEntity.find({

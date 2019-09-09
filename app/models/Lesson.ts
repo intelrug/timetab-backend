@@ -17,6 +17,8 @@ export interface Lesson {
   teacher_id: number;
   science_id: number;
   auditory: string;
+  subgroup: number;
+  notes: string
 }
 
 @Entity('lessons')
@@ -54,6 +56,14 @@ export default class LessonEntity extends BaseEntity implements Lesson {
 
   @Column({ type: 'varchar', nullable: true, default: null })
   auditory: string;
+
+  @Column({
+    type: 'tinyint', unsigned: true, nullable: true, default: null,
+  })
+  subgroup: number;
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  notes: string;
 
   public static async getMany(
     ids: string = '',

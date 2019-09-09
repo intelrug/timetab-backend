@@ -90,6 +90,12 @@ export default class LessonEntity extends BaseEntity implements Lesson {
         teacher_id: If(teacherIds, In(teacherIds.split(','))),
         science_id: If(scienceIds, In(scienceIds.split(','))),
       },
+      order: {
+        group_id: 'ASC',
+        week: 'ASC',
+        day: 'ASC',
+        number: 'ASC',
+      },
     });
 
     const groupIdsAll: number[] = [];

@@ -15,7 +15,7 @@ export interface LessonsGetMany {
   types: Type[],
 }
 
-export interface LessonsGetOne {
+export interface LessonsGetById {
   lesson: Lesson,
   groups: Group[],
   teachers: Teacher[],
@@ -40,8 +40,8 @@ export class Lessons extends Controller {
   }
 
   @Get('{id}')
-  @OperationId('lessonsGetOne')
-  public async getOne(id: number): Promise<LessonsGetOne> {
+  @OperationId('LessonsGetById')
+  public async getOne(id: number): Promise<LessonsGetById> {
     return LessonEntity.getOne(id);
   }
 }

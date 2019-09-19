@@ -3,29 +3,19 @@ import {
 } from 'tsoa';
 import ScienceEntity, { Science } from '../models/Science';
 
-export interface SciencesGetMany {
-  sciences: Science[],
-}
-
-export interface SciencesGetOne {
-  science: Science,
-}
-
 @Route('sciences')
 export class Sciences extends Controller {
   @Get()
   @OperationId('sciencesGetMany')
   public async getMany(
     @Query() ids?: string,
-  ): Promise<SciencesGetMany> {
-    const sciences: ScienceEntity[] = await ScienceEntity.getMany(ids);
-    return { sciences };
+  ): Promise<Science[]> {
+    return ScienceEntity.getMany(ids);
   }
 
   @Get('{id}')
-  @OperationId('sciencesGetOne')
-  public async getOne(id: number): Promise<SciencesGetOne> {
-    const science: ScienceEntity = await ScienceEntity.getOne(id);
-    return { science };
+  @OperationId('sciencesGetById')
+  public async getOne(id: number): Promise<Science> {
+    return ScienceEntity.getOne(id);
   }
 }

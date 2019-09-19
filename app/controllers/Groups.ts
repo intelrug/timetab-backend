@@ -3,29 +3,19 @@ import {
 } from 'tsoa';
 import GroupEntity, { Group } from '../models/Group';
 
-export interface GroupsGetMany {
-  groups: Group[],
-}
-
-export interface GroupsGetOne {
-  group: Group,
-}
-
 @Route('groups')
 export class Groups extends Controller {
   @Get()
   @OperationId('groupsGetMany')
   public async getMany(
     @Query() ids?: string,
-  ): Promise<GroupsGetMany> {
-    const groups: GroupEntity[] = await GroupEntity.getMany(ids);
-    return { groups };
+  ): Promise<Group[]> {
+    return GroupEntity.getMany(ids);
   }
 
   @Get('{id}')
-  @OperationId('groupsGetOne')
-  public async getOne(id: number): Promise<GroupsGetOne> {
-    const group: GroupEntity = await GroupEntity.getOne(id);
-    return { group };
+  @OperationId('groupsGetById')
+  public async getOne(id: number): Promise<Group> {
+    return GroupEntity.getOne(id);
   }
 }
